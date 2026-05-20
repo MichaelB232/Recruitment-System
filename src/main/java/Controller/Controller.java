@@ -13,107 +13,86 @@ import javax.swing.table.DefaultTableModel;
 import Model.Kandidat.*;
 import Model.Kandidat.ModelKandidat;
 import Model.Kandidat.KandidatDAO;
-import View.MainView;
+//import View.MainView;
+import Model.Kandidat.*;
 
 public class Controller {
-    
-    private MainView view;
-    private KandidatDAO dao;
-    
-    public Controller(MainView view) {
-        
-        this.view = view;
+
+    InterfaceDAO dao;
+    List<ModelKandidat> list;
+
+    public Controller() {
         dao = new KandidatDAO();
     }
-    
-    public void insert() {
-        
-        ModelKandidat k = createObject();
-        
-        dao.create(k);
-        
-        loadTable();
-        
-        view.clearForm();
-        
-    }
-    
-    public void update() {
-        
-        ModelKandidat k = createObject();
-        
-        k.setId(view.getSelectedId());
-        
-        dao.update(k);
-        
-        loadTable();
-        
-        view.clearForm();
-    }
-    
-    public void delete() {
-        
-        dao.delete(view.getSelectedId());
-        
-        loadTable();
-        
-        view.clearForm();
-    }
-    
-    public void clear() {
-        
-        view.clearForm();
-    }
-    
-    private ModelKandidat createObject() {
-        
-        String nama = view.getNama();
-        String path = view.getPath();
-        
-        int writing = Integer.parseInt(view.getWriting());
-        int coding = Integer.parseInt(view.getCoding());
-        int interview = Integer.parseInt(view.getInterview());
-        
-        ModelKandidat k;
-        
-        if (path.equals("Android Developer")) {
-            k = new AndroidDev();
-            
+
+    public void insert(String nama,
+            String path,
+            int writing,
+            int coding,
+            int interview) {
+        ModelKandidat model;
+
+        if (path == "Android Developer") {
+            model = new AndroidDev();
         } else {
-            k = new WebDeveloper();
+            model = new WebDeveloper();
         }
-        k.setName(nama);
-        k.setPath(path);
-        k.setWriting(writing);
-        k.setCoding(coding);
-        k.setWriting(writing);
-        
-        return k;
+        double score
+                = (writing + coding + interview) / 3.0;
+        String status;
+        if (score >= 85) {
+            status = "DITERIMA";
+        } else {
+            status = "TIDAK DITERIMA";
+        }
+        model.setName(nama);
+        model.setPath(path);
+        model.setWriting(writing);
+        model.setCoding(coding);
+        model.setInterview(interview);
+        model.setScore(score);
+        model.setStatus(status);
+        dao.create(model);
     }
-    
-    public void loadTable() {
-        
-        DefaultTableModel model
-                = (DefaultTableModel) view.getTable().getModel();
-        
-        model.setRowCount(0);
-        
-        List<ModelKandidat> listKandidat = dao.findAll();
-        
-        for (ModelKandidat k : listKandidat) {
-            
-            Object[] row = {
-                k.getId(),
-                k.getName(),
-                k.getPath(),
-                k.getWriting(),
-                k.getCoding(),
-                k.getInterview(),
-                k.calculate_final_score(),
-                k.check_status()
-            };
-            
-            model.addRow(row);
+
+    public void update(int id,
+            String nama,
+            String path,
+            int writing,
+            int coding,
+            int interview) {
+        ModelKandidat model;
+        if (path == "Android Developer") {
+            model = new AndroidDev();
+        } else {
+            model = new WebDeveloper();
         }
+        double score
+                = (writing + coding + interview) / 3.0;
+        String status;
+        if (score >= 85) {
+            status = "DITERIMA";
+        } else {
+            status = "TIDAK DITERIMA";
+        }
+        model.setId(id);
+        model.setName(nama);
+        model.setPath(path);
+        model.setWriting(writing);
+        model.setCoding(coding);
+        model.setInterview(interview);
+        model.setScore(score);
+        model.setStatus(status);
+        dao.update(model);
+    }
+
+    public ModelTable showData() {
+        list = dao.findAll();
+        ModelTable table = new ModelTable(list);
+        return table;
+    }
+
+    public void delete(int id) {
+        dao.delete(id);
     }
 }

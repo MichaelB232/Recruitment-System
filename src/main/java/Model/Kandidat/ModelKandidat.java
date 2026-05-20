@@ -16,7 +16,7 @@ abstract public class ModelKandidat implements recruitment {
     private int id;
     private int writing;
     private int coding;
-    private int score;
+    private double score;
     private String status;
 
     public String getName() {
@@ -30,12 +30,12 @@ abstract public class ModelKandidat implements recruitment {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public void setPath(String path){
+
+    public void setPath(String path) {
         this.path = path;
     }
 
-    public float getWriting() {
+    public int getWriting() {
         return writing;
     }
 
@@ -57,7 +57,7 @@ abstract public class ModelKandidat implements recruitment {
     @Override
     public abstract float calculate_final_score();
 
-    public float getCoding() {
+    public int getCoding() {
         return coding;
     }
 
@@ -65,11 +65,11 @@ abstract public class ModelKandidat implements recruitment {
         this.coding = coding;
     }
 
-    public float getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 

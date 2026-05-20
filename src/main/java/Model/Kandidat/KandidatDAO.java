@@ -25,7 +25,7 @@ public class KandidatDAO implements InterfaceDAO {
     }
 
     public boolean create(ModelKandidat k) {
-        String sql = "INSERT INTO kandidat (nama, path, writing, coding, interview, score, status) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO recruit (nama, path, writing, coding, interview, score, status) VALUES (?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, k.getName());
@@ -44,7 +44,7 @@ public class KandidatDAO implements InterfaceDAO {
     }
 
     public List<ModelKandidat> findAll() {
-        String sql = "SELECT * FROM kandidat";
+        String sql = "SELECT * FROM recruit";
 
         List<ModelKandidat> kandidats = new ArrayList<>();
         try {
@@ -53,27 +53,28 @@ public class KandidatDAO implements InterfaceDAO {
 
             while (rs.next()) {
                 ModelKandidat k;
-                if ("Web Developer".equals(rs.getString("Path"))) {
+                if ("Web Developer".equals(rs.getString("path"))) {
                     k = new WebDeveloper();
                 } else {
                     k = new AndroidDev();
                 }
                 k.setCoding(rs.getInt("coding"));
+                k.setWriting(rs.getInt("writing"));
                 k.setInterview(rs.getInt("interview"));
-                k.setName(rs.getString("name"));
+                k.setName(rs.getString("nama"));
                 k.setScore(rs.getInt("Score"));
                 k.setId(rs.getInt("id"));
                 k.setStatus(rs.getString("status"));
                 kandidats.add(k);
             }
         } catch (SQLException e) {
-            System.out.println("Failed to fetch data");
+            System.out.println("Failed to fetch data : " + e.getMessage());
         }
         return kandidats;
     }
 
     public boolean delete(int id) {
-        String sql = "DELETE FROM kandidat WHERE id = ?";
+        String sql = "DELETE FROM recruit WHERE id = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
@@ -86,15 +87,15 @@ public class KandidatDAO implements InterfaceDAO {
     }
 
     public boolean update(ModelKandidat k) {
-        String sql = "UPDATE kandidat SET nama = ?, path = ?, writing = ?, coding = ?, interview = ?, score = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE recruit SET nama = ?, path = ?, writing = ?, coding = ?, interview = ?, score = ?, status = ? WHERE id = ?";
 
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, k.getName());
             ps.setString(2, k.getPath());
-            ps.setDouble(3, k.getWriting());
-            ps.setDouble(4, k.getCoding());
-            ps.setDouble(5, k.getInterview());
+            ps.setInt(3, k.getWriting());
+            ps.setInt(4, k.getCoding());
+            ps.setInt(5, k.getInterview());
             ps.setDouble(6, k.calculate_final_score());
             ps.setString(7, k.check_status());
 

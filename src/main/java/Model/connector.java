@@ -16,15 +16,17 @@ public class connector {
 
     public static Connection conn;
 
-    private static String url_db = "jbdc::mysql://localhost:3306/recruit_db";
-    private static String user = "host";
+    private static String url_db = "jdbc:mysql://localhost:3306/recruit_db";
+    private static String user = "root";
     private static String pass = "";
 
     public static Connection connect() {
         try {
+            System.out.println("Successfully connect to database");
             conn = DriverManager.getConnection(url_db, user, pass);
+            return conn;
         } catch (SQLException e) {
-            System.out.println("Failed to connect Database");
+            System.out.println("Failed to connect Databaseaaaa");
         }
         return conn;
     }
